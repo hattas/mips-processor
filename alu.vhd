@@ -1,50 +1,53 @@
--- arithmetic logic unit
--- based on top alu on page B-33
+-- alu top
 
 library IEEE;
 use IEEE.std_logic_1164.all;
 
 entity alu is
 	port(
-		a, b, carryin, ainvert, binvert, less: in std_logic;
-		alu_op: in std_logic_vector(1 downto 0);
-		result: in std_logic_vector(31 downto 0);
-		carryout: out std_logic;
+		aluop: in std_logic_vector(1 downto 0);
+		funccode: in std_logic_vector(5 downto 0);
+		a, b: in std_logic_vector(31 downto 0);
+		result: out std_logic_vector(31 downto 0);
+		overflow, zeroflag, carryout: out std_logic;
 	);
 end alu;
 
 architecture arch of alu is
 
-signal c, b_int, a_int;
-
-component full_adder is
-	port(
-		x, y, cin: in std_logic;
-		sum, cout: out std_logic
-	);
-end component;
-
-begin
-
-c <= carryin;
-
-a_int <= not a when ainvert = '1' else a;
-b_int <= not b when binvert = '1' else b;
-
-result_and <= a_int and b_int;
-result_or <= a_int or b_int;
-fa: full_adder port map(a_int, b_int, carryin, result_add, carryout);
-
-
-mux1: process(operation)
-begin
-	case operation is
-		when "00" => result <= result_and;
-		when "01" => result <= result_or;
-		when "10" => result <= result_add;
-		when "11" => result <= less;
-	end case;
-end process mux1;
+	component alu32bit is
+		port(
+			ainvert, bnegate: in std_logic;
+			operation: in std_logic_vector(1 downto 0);
+			a, b: in std_logic_vector(31 downto 0);
+			result: out std_logic_vector(31 downto 0);
+			overflow, zeroflag, carryout: out std_logic;
+		);
+	end component;
 	
+	component alu_control is
+		port(
+			aluop: in std_logic_vector(1 downto 0);
+			funccode: in std_logic_vector(5 downto 0);
+			aluctl: out std_logic_vector(3 downto 0);
+		);
+	end component;
+	
+	signal aluctl;
+	
+begin
+
+	ac: alu_control port map(aluop, funcode, aluctl);
+	alu32: alu32bit port map(
+		ainvert=>aluctl(3),
+		bnegate=>aluctl(2),
+		operation=>aluctl(1 downto 0),
+		a=>a,
+		b=>b,
+		result=>result,
+		overflow=>overflow,
+		zeroflag=>zeroflag,
+		carryout=>carryout
+	);
 
 end alu;
