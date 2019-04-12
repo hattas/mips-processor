@@ -12,14 +12,14 @@ entity memory_unit is
 		clk: in std_logic;
 		address: in std_logic_vector(5 downto 0);
 		data: in std_logic_vector(31 downto 0);
-		write_enable, clock: in std_logic;
+		write_enable: in std_logic;
 		output: out std_logic_vector(31 downto 0);
 	);
 end memory_unit;
 
 architecture arch of memory_unit is
 
-		type MEM_ARRAY_64x32 is array(0 to 64) of std_logic_vector(31 downto 0);
+		type MEM_ARRAY_64x32 is array(0 to 63) of std_logic_vector(31 downto 0);
 	
 begin
 	
@@ -36,13 +36,11 @@ begin
 					var_data(i)  := X"0000";
 			end generate GEN_REG
 		elsif (rising_edge(clk) and write_enable = '1') then
-			-- synchronous rdata mem write should be done on falling edge?
+			-- synchronous rdata mem write should be done on falling edge
 			var_data(var_address) := data;
 		end if;
-	 
 		-- asynchronous continuous read of the data memory location at address var_addr 
 		output <= var_data(var_address);
-		
 	end process;
 
 end memory_unit;
