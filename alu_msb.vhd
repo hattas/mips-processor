@@ -9,14 +9,15 @@ entity alu_msb is
 	port(
 		a, b, carryin, ainvert, binvert, less: in std_logic;
 		operation: in std_logic_vector(1 downto 0);
-		result: in std_logic_vector(31 downto 0);
-		carryout, set, overflow: out std_logic;
+		result: out std_logic;
+		carryout, set, overflow: out std_logic
 	);
 end alu_msb;
 
 architecture arch of alu_msb is
 
-	signal c, b_int, a_int;
+	signal b_int, a_int: std_logic;
+	signal result_and, result_or, result_add: std_logic;
 
 	component full_adder is
 		port(
@@ -28,7 +29,7 @@ architecture arch of alu_msb is
 	component overflow_detect is
 		port(
 			sign_a, sign_b, sign_result : in std_logic;
-			overflow : out std_logic;
+			overflow : out std_logic
 		);
 	end component;	
 
@@ -47,4 +48,4 @@ begin
 			  result_add when operation = "10" else 
 			  less       when operation = "11";
 	
-end alu_msb;
+end arch;

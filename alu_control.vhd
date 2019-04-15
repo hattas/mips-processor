@@ -4,12 +4,13 @@
 
 library IEEE;
 use IEEE.std_logic_1164.all;
+use ieee.numeric_std.all; --for unsigned
 
 entity alu_control is
 	port(
 		aluop: in std_logic_vector(1 downto 0);
 		funccode: in std_logic_vector(5 downto 0);
-		aluctl: out std_logic_vector(3 downto 0);
+		aluctl: out std_logic_vector(3 downto 0)
 	);
 end alu_control;
 
@@ -19,7 +20,7 @@ begin
 
 process(funccode)
 begin
-    case unsigned(funccode) is -- convert to integer for switch statement
+    case to_integer(unsigned(funccode)) is -- convert to integer for switch statement
         when 32 => --add
 			aluctl <= "0010"; --2
 		when 34 => --sub
@@ -38,4 +39,4 @@ begin
 end process;
 
 
-end alu_control;
+end arch;

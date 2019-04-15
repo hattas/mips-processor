@@ -9,7 +9,7 @@ entity alu is
 		funccode: in std_logic_vector(5 downto 0);
 		a, b: in std_logic_vector(31 downto 0);
 		result: out std_logic_vector(31 downto 0);
-		overflow, zeroflag, carryout: out std_logic;
+		overflow, zeroflag, carryout: out std_logic
 	);
 end alu;
 
@@ -21,7 +21,7 @@ architecture arch of alu is
 			operation: in std_logic_vector(1 downto 0);
 			a, b: in std_logic_vector(31 downto 0);
 			result: out std_logic_vector(31 downto 0);
-			overflow, zeroflag, carryout: out std_logic;
+			overflow, zeroflag, carryout: out std_logic
 		);
 	end component;
 	
@@ -29,15 +29,15 @@ architecture arch of alu is
 		port(
 			aluop: in std_logic_vector(1 downto 0);
 			funccode: in std_logic_vector(5 downto 0);
-			aluctl: out std_logic_vector(3 downto 0);
+			aluctl: out std_logic_vector(3 downto 0)
 		);
 	end component;
 	
-	signal aluctl;
+	signal aluctl: std_logic_vector(3 downto 0);
 	
 begin
 
-	ac: alu_control port map(aluop, funcode, aluctl);
+	ac: alu_control port map(aluop=>aluop, funccode=>funccode, aluctl=>aluctl);
 	alu32: alu32bit port map(
 		ainvert=>aluctl(3),
 		bnegate=>aluctl(2),
@@ -50,4 +50,4 @@ begin
 		carryout=>carryout
 	);
 
-end alu;
+end arch;

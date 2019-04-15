@@ -8,14 +8,15 @@ entity alu1bit is
 	port(
 		a, b, carryin, ainvert, binvert, less: in std_logic;
 		operation: in std_logic_vector(1 downto 0);
-		result: in std_logic_vector(31 downto 0);
-		carryout: out std_logic;
+		result: out std_logic;
+		carryout: out std_logic
 	);
 end alu1bit;
 
 architecture arch of alu1bit is
 
-	signal c, b_int, a_int;
+	signal b_int, a_int: std_logic;
+	signal result_and, result_or, result_add: std_logic;
 
 	component full_adder is
 		port(
@@ -38,4 +39,4 @@ begin
 			  result_add when operation = "10" else 
 			  less       when operation = "11";
 	
-end alu1bit;
+end arch;
