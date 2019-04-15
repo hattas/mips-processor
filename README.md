@@ -25,3 +25,17 @@ Kyle Change, John Hattas, and Patrick Woodford
   - 64x32 SRAM
 - Control unit
   - generates control signals from opcode
+
+
+### TODO
+- components
+  - register file
+  - shifting of ALU
+  - add all functions to control
+    - add extras for extra credit
+
+- test benches
+  - register file
+  - memory
+  - all alu functions
+  - alu component tb's?
