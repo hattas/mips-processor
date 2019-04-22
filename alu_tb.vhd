@@ -126,6 +126,44 @@ UUT: entity work.alu port map(aluop=>aluop_s, funccode=>funccode_s, a=>a_s,
         b_s <= x"23492748";
         wait for 10 ns;
         
+        -- R type SLL
+        -- shifts b left by a
+        funccode_s <= "000000";
+        
+        -- shift left by 1
+        a_s <= x"00000001";
+        b_s <= x"FDB97531";
+        wait for 10 ns;
+        
+        -- shift left by 2
+        a_s <= x"00000010";
+        b_s <= x"FDB97531";
+        wait for 10 ns;
+        
+        -- shift left by 16
+        a_s <= x"00010000";
+        b_s <= x"FDB97531";
+        wait for 10 ns;
+        
+        -- R type SRL
+        -- shifts b right by a
+        funccode_s <= "000010";
+        
+        -- shift right by 1
+        a_s <= x"00000001";
+        b_s <= x"FDB97531";
+        wait for 10 ns;
+        
+        -- shift right by 2
+        a_s <= x"00000002";
+        b_s <= x"FDB97531";
+        wait for 10 ns;
+        
+        -- shift right by 16
+        a_s <= x"00000010";
+        b_s <= x"FDB97531";
+        wait for 10 ns;
+        
            
     end process;
 end Behavioral;
