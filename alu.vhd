@@ -15,31 +15,11 @@ entity alu is
 end alu;
 
 architecture arch of alu is
-
-	component alu32bit is
-		port(
-			ainvert, bnegate: in std_logic;
-			operation: in std_logic_vector(1 downto 0);
-			a, b: in std_logic_vector(31 downto 0);
-			result: out std_logic_vector(31 downto 0);
-			overflow, zeroflag, carryout: out std_logic
-		);
-	end component;
-	
-	component alu_control is
-		port(
-			aluop: in std_logic_vector(1 downto 0);
-			funccode: in std_logic_vector(5 downto 0);
-			aluctl: out std_logic_vector(3 downto 0)
-		);
-	end component;
-	
-	signal aluctl: std_logic_vector(3 downto 0);
-	
+	signal aluctl: std_logic_vector(3 downto 0);	
 begin
 
-	ac: alu_control port map(aluop=>aluop, funccode=>funccode, aluctl=>aluctl);
-	alu32: alu32bit port map(
+	ac: entity work.alu_control port map(aluop=>aluop, funccode=>funccode, aluctl=>aluctl);
+	alu32: entity work.alu32bit port map(
 		ainvert=>aluctl(3),
 		bnegate=>aluctl(2),
 		operation=>aluctl(1 downto 0),

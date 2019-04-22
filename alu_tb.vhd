@@ -9,27 +9,16 @@ entity alu_tb is
 --  Port ( );
 end alu_tb;
 
-architecture Behavioral of alu_tb is
-component alu is
-	port(
-		aluop: in std_logic_vector(1 downto 0);
-		funccode: in std_logic_vector(5 downto 0);
-		a, b: in std_logic_vector(31 downto 0);
-		result: out std_logic_vector(31 downto 0);
-		overflow, zeroflag, carryout: out std_logic
-	);
-    end component;
-     
+architecture Behavioral of alu_tb is    
     signal aluop_s:  std_logic_vector(1 downto 0);
     signal funccode_s:  std_logic_vector(5 downto 0);
     signal a_s, b_s: std_logic_vector(31 downto 0);
     signal result_s:  std_logic_vector(31 downto 0);
     signal overflow_s, zeroflag_s, carryout_s:  std_logic;
-
 begin
-UUT: alu port map(aluop=>aluop_s, funccode=>funccode_s, a=>a_s,
-                  b=>b_s, result=>result_s, overflow=>overflow_s,
-                  zeroflag=>zeroflag_s, carryout=>carryout_s);
+UUT: entity work.alu port map(aluop=>aluop_s, funccode=>funccode_s, a=>a_s,
+                              b=>b_s, result=>result_s, overflow=>overflow_s,
+                              zeroflag=>zeroflag_s, carryout=>carryout_s);
     process
     begin
         
