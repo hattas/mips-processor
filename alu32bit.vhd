@@ -1,5 +1,7 @@
--- arithmetic logic unit
--- what is op and function?
+-- 32 bit ALU
+-- this component instantiates 32 1 bit alu components
+-- it operates on 2 inputs of length 32
+-- it outputs the result as well as various flags
 
 library IEEE;
 use IEEE.std_logic_1164.all;

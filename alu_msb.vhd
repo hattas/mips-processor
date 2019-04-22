@@ -1,6 +1,6 @@
--- arithmetic logic unit
--- need to add overflow detection unit and clean up the code
--- can we use ieee bit shift functions?
+-- 1 bit alu for most significant bit
+-- adds overflow detection
+-- has set output for slt
 
 library IEEE;
 use IEEE.std_logic_1164.all;
@@ -48,4 +48,5 @@ begin
 			  result_add when operation = "10" else 
 			  less       when operation = "11";
 	
+	set <= result_add;
 end arch;

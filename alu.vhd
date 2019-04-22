@@ -1,4 +1,5 @@
--- alu top
+-- top level alu
+-- contains 32 bit alu and alu control
 
 library IEEE;
 use IEEE.std_logic_1164.all;

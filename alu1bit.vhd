@@ -1,5 +1,6 @@
--- arithmetic logic unit
--- based on top alu on page B-33
+-- 1 bit alu
+-- performs 3 operations, and, or, and add
+-- 4 input mux selects between and, or, add and less
 
 library IEEE;
 use IEEE.std_logic_1164.all;

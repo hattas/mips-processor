@@ -1,5 +1,7 @@
-
 -- overflow detection unit
+-- outputs overflow when:
+-- inputs are both positive and result is negative
+-- or inputs are negative and result is positive
 
 library IEEE;
 use IEEE.std_logic_1164.all;

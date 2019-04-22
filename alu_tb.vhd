@@ -1,35 +1,9 @@
-----------------------------------------------------------------------------------
--- Company: 
--- Engineer: 
--- 
--- Create Date: 04/14/2019 07:23:12 PM
--- Design Name: 
--- Module Name: alu_tb - Behavioral
--- Project Name: 
--- Target Devices: 
--- Tool Versions: 
--- Description: 
--- 
--- Dependencies: 
--- 
--- Revision:
--- Revision 0.01 - File Created
--- Additional Comments:
--- 
-----------------------------------------------------------------------------------
-
+-- alu testbench
+-- tests all combinations of ALUOp and functions with various inputs
+-- tests edge cases for overlow and carry with add/subtract
 
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
-
--- Uncomment the following library declaration if using
--- arithmetic functions with Signed or Unsigned values
---use IEEE.NUMERIC_STD.ALL;
-
--- Uncomment the following library declaration if instantiating
--- any Xilinx leaf cells in this code.
---library UNISIM;
---use UNISIM.VComponents.all;
 
 entity alu_tb is
 --  Port ( );
@@ -60,56 +34,109 @@ UUT: alu port map(aluop=>aluop_s, funccode=>funccode_s, a=>a_s,
     begin
         
         
-        -- add section
-        funccode_s <= "100000";
+        -- opcode 00 add section
+        funccode_s <= "------";
         aluop_s <= "00";
         
         -- add zero test
         a_s <= x"00000000";
         b_s <= x"00000000";
-        wait for 100 ns;
+        wait for 10 ns;
         -- add general test no carry out
         a_s <= x"00010010";
         b_s <= x"00011000";
-        wait for 100 ns;
+        wait for 10 ns;
         -- no overflow, carry out
         a_s <= x"FFFFFFFF"; -- -1
         b_s <= x"00000001"; -- 1
-        wait for 100 ns;
+        wait for 10 ns;
         -- overflow and carry out
         a_s <= x"80000000";
         b_s <= x"80000000";
-        wait for 100 ns;
+        wait for 10 ns;
         -- no overflow no nothing
         a_s <= x"0FFFFFFF";
         b_s <= x"00000001";
-        wait for 100 ns;
+        wait for 10 ns;
         -- overflow no carry out
         a_s <= x"40000000";
         b_s <= x"40000000";
-        wait for 100 ns;
+        wait for 10 ns;
         
-        a_s <= x"00000000"; -- -1
-        b_s <= x"00000000"; -- 1
-        wait for 500 ns;
-        -- subtraction
-        funccode_s <= "100010";
-        aluop_s <= "00";
+        -- op 01 subtraction
+        aluop_s <= "01";
         
         a_s <= x"00000002";
         b_s <= x"00000001";
-        wait for 100 ns;
+        wait for 10 ns;
         a_s <= x"00000001";
         b_s <= x"00000001";
-        wait for 100 ns;
+        wait for 10 ns;
         a_s <= x"FFFFFFFF";
         b_s <= x"FFFFFFFF";
-        wait for 100 ns;
+        wait for 10 ns;
         a_s <= x"F4873ABC";
         b_s <= x"10932498";
-        wait for 100 ns;
+        wait for 10 ns;
+        
+        -- R type section
+        aluop_s <= "10";
+        
+        -- R type addition
+        funccode_s <= "100000";
+        
+        a_s <= x"00010010";
+        b_s <= x"00011000";
+        wait for 10 ns;
+        a_s <= x"FFFFFFFF"; -- -1
+        b_s <= x"00000001"; -- 1
+        wait for 10 ns;
+        
+        -- R type subtraction
+        funccode_s <= "100010";
+        
+        a_s <= x"00000002";
+        b_s <= x"00000001";
+        wait for 10 ns;
+        a_s <= x"00000001";
+        b_s <= x"00000001";
+        wait for 10 ns;
+        a_s <= x"FFFFFFFF";
+        b_s <= x"FFFFFFFF";
+        wait for 10 ns;
+        a_s <= x"F4873ABC";
+        b_s <= x"10932498";
+        wait for 10 ns;
+        
+        -- R type  and
+        funccode_s <= "100100";
+        
+        a_s <= x"01101011";
+        b_s <= x"10111000";
+        wait for 10 ns;
+        
+        -- R type  or
+        funccode_s <= "100101";
+        
+        a_s <= x"01101011";
+        b_s <= x"10111000";
+        wait for 10 ns;
+        
+        -- R type  slt
+        funccode_s <= "101010";
+        
+        a_s <= x"00000001";
+        b_s <= x"00000000";
+        wait for 10 ns;
+        
+        a_s <= x"00000000";
+        b_s <= x"00000001";
+        wait for 10 ns;
+        
+        a_s <= x"18347938";
+        b_s <= x"23492748";
+        wait for 10 ns;
         
            
-        
     end process;
 end Behavioral;

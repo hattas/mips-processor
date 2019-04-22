@@ -1,6 +1,10 @@
-
 -- alu control unit
--- page B-38 is the verilog example
+-- takes in aluop and function and determines alu control bits
+-- aluctl is 4 bits and is as follows
+-- aluctl(3) is ainvert
+-- aluctl(2) is bnegate
+-- aluctl(1 downto 0) is operation
+-- based on truth table on page 261
 
 library IEEE;
 use IEEE.std_logic_1164.all;
@@ -18,24 +22,23 @@ architecture arch of alu_control is
 
 begin
 
-process(funccode)
+-- implement alu control truth table from page 261 of Computer Organization and Design
+process(aluop, funccode)
 begin
-    case to_integer(unsigned(funccode)) is -- convert to integer for switch statement
-        when 32 => --add
-			aluctl <= "0010"; --2
-		when 34 => --sub
-			aluctl <= "0110"; --6
-		when 36 => --and
-			aluctl <= "0000"; --0
-		when 37 => --or
-			aluctl <= "0001"; --1
-		when 39 => --nor
-			aluctl <= "1100"; --12
-		when 42 => --slt
-			aluctl <= "0111"; --7
-        when others =>
-			aluctl <= "1111"; -- 15 (should not happen)
-    end case;
+	if aluop = "00" then
+		aluctl <= "0010"; --add
+	elsif aluop(0) = '1' then
+		aluctl <= "0110"; --sub
+	elsif aluop(1) = '1' then
+		case funccode(3 downto 0) is
+			when "0000" => aluctl <= "0010"; --add
+			when "0010" => aluctl <= "0110"; --sub
+			when "0100" => aluctl <= "0000"; --and
+			when "0101" => aluctl <= "0001"; --or
+			when "1010" => aluctl <= "0111"; --slt
+			when others => aluctl <= "XXXX"; --shouldn't happen
+		end case;
+	end if;
 end process;
 
 
