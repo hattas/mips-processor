@@ -1,12 +1,17 @@
--- alu testbench
--- tests all combinations of ALUOp and functions with various inputs
--- tests edge cases for overlow and carry with add/subtract
+----------------------------------------------------------------------------------
+--
+-- File: alu_tb.vhd
+-- Authors: Kyle Chang, John Hattas, Patrick Woodford
+-- Created: 4/21/19
+-- Description: This is the testbench for the alu.
+-- 		We test every combination of aluop and funccode with many inputs and edge cases for each.
+-- 
+----------------------------------------------------------------------------------
 
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 
 entity alu_tb is
---  Port ( );
 end alu_tb;
 
 architecture Behavioral of alu_tb is    

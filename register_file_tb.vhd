@@ -1,6 +1,12 @@
--- alu testbench
--- tests all combinations of ALUOp and functions with various inputs
--- tests edge cases for overlow and carry with add/subtract
+----------------------------------------------------------------------------------
+--
+-- File: register_file_tb.vhd
+-- Authors: Kyle Chang, John Hattas, Patrick Woodford
+-- Created: 4/21/19
+-- Description: This is the testbench for the register file.
+-- 		We write and read to various registers to ensure proper operation.
+-- 
+----------------------------------------------------------------------------------
 
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;

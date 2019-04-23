@@ -1,68 +1,55 @@
 ----------------------------------------------------------------------------------
--- Company: 
--- Engineer: 
--- 
--- Create Date: 04/11/2019 06:30:10 PM
--- Design Name: 
--- Module Name: adder_32bit_tb - Behavioral
--- Project Name: 
--- Target Devices: 
--- Tool Versions: 
--- Description: 
--- 
--- Dependencies: 
--- 
--- Revision:
--- Revision 0.01 - File Created
--- Additional Comments:
+--
+-- file: adder_32bit_tb.vhd
+-- authors: Kyle Chang, John Hattas, Patrick Woodford
+-- created: 4/12/19
+-- description: This is the testbench for the 32 bit adder.
+-- 		It tests various combinations of inputs with and without carry in.
 -- 
 ----------------------------------------------------------------------------------
-
 
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 
--- Uncomment the following library declaration if using
--- arithmetic functions with Signed or Unsigned values
---use IEEE.NUMERIC_STD.ALL;
-
--- Uncomment the following library declaration if instantiating
--- any Xilinx leaf cells in this code.
---library UNISIM;
---use UNISIM.VComponents.all;
-
 entity adder_32bit_tb is
---  Port ( );
 end adder_32bit_tb;
 
 architecture Behavioral of adder_32bit_tb is
-    component adder
-           port(
-           cin: in std_logic;
-           a, b : in  STD_LOGIC_VECTOR(31 downto 0);
-                   z : out STD_LOGIC_VECTOR(31 downto 0);
-                   cout : out STD_LOGIC
-           );
-     end component;
-     
      signal ai, bi, zi : STD_LOGIC_VECTOR(31 downto 0);
-     signal cini : STD_LOGIC:='0';
-     signal couti : STD_LOGIC:='0';
-
+     signal cini : STD_LOGIC := '0';
+     signal couti : STD_LOGIC := '0';
 begin
-UUT: adder port map(a=>ai, b=>bi, z=>zi, cin=>cini, cout=>couti);
+	UUT: entity work.adder port map(a=>ai, b=>bi, z=>zi, cin=>cini, cout=>couti);
     process
     begin
-    ai <= "00000000000000000000000000000000";
-    bi <= "00000000000000000000000000000000";
-    wait for 100 ns;
-    cini <= '1';
-    ai <= "00000000000000000000000000000000";
-    bi <= "00000000000000000001111111111111";
-    wait for 100 ns;
-    
-    ai <= "00000000000000000000111111000000";
-    bi <= "00000000000000000111100000000000";
-    wait for 100 ns;
+		-- zero test
+		ai <= x"00000000";
+		bi <= x"00000000";
+		wait for 10 ns;
+		
+		-- carry in test
+		cini <= '1';
+		ai <= x"00000000";
+		bi <= x"0000ffff";
+		wait for 10 ns;
+		
+		-- carry out test
+		cini <= '0'
+		ai <= "ffffffff";
+		bi <= "00000001";
+		wait for 10 ns;
+		
+		-- carry out and carry in test
+		cini <= '1'
+		ai <= "ffffffff";
+		bi <= "00000000";
+		wait for 10 ns;
+		
+		-- general test
+		cini <= '0'
+		ai <= "194ad342";
+		bi <= "5be9485f";
+		wait for 10 ns;
+		
     end process;
 end Behavioral;
