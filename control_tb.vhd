@@ -30,6 +30,7 @@ architecture Behavioral of control_tb is
     signal alusrca_s: std_logic;
     signal alusrcb_s: std_logic;
     signal regwrite_s: std_logic;
+	signal jumpreg_s: std_logic;
     
 
 begin
@@ -37,7 +38,7 @@ UUT: entity work.control port map(opcode=>opcode_s, funct=>funct_s, regdst=>regd
                 jump=>jump_s, branch=>branch_s, memread=>memread_s,
                 regdatasel=>regdatasel_s, aluop=>aluop_s,
                 memwrite=>memwrite_s, alusrca=>alusrca_s, alusrcb=>alusrcb_s,
-                regwrite=>regwrite_s);
+                regwrite=>regwrite_s, jumpreg=>jumpreg_s);
                 
     process
     begin

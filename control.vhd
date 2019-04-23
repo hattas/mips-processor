@@ -18,7 +18,8 @@ entity control is
 		memwrite: out std_logic;
 		alusrca: out std_logic;
 		alusrcb: out std_logic;
-		regwrite: out std_logic
+		regwrite: out std_logic;
+		jumpreg: out std_logic
 	);
 end control;
 
@@ -103,6 +104,12 @@ begin
 			regwrite <= '0';
 		else
 			regwrite <= '1';
+		end if;
+		
+		if r_type = '1' and funct = "001000" then
+			jumpreg <= '1';
+		else
+			jumpreg <= '0';
 		end if;
 		
 	end process;

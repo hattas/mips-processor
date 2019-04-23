@@ -14,24 +14,16 @@ end adder;
 
 architecture my_structure of adder is
 
-component FULL_ADDER
-	port( 
-		x, y, cin : in  STD_LOGIC;
-		sum, cout : out STD_LOGIC 
-	);
-end component;
-
 -- carry outs
 signal c : std_logic_vector(30 downto 0);
 
-
 begin
 
-first_adder: full_adder port map (x=>a(0), y=>b(0), cin=>cin, sum=>z(0), cout=>c(0));
+first_adder: entity work.full_adder port map (x=>a(0), y=>b(0), cin=>cin, sum=>z(0), cout=>c(0));
 gen_adder:
 for i in 1 to 30 generate
-	adder_i: full_adder port map (x=>a(i), y=>b(i), cin=>c(i-1), sum=>z(i), cout=>c(i));
+	adder_i: entity work.full_adder port map (x=>a(i), y=>b(i), cin=>c(i-1), sum=>z(i), cout=>c(i));
 end generate gen_adder;
-last_adder: FULL_ADDER port map (x=>a(31), y=>b(31), cin=>c(30), sum=>z(31), cout=>cout);
+last_adder: entity work.full_adder port map (x=>a(31), y=>b(31), cin=>c(30), sum=>z(31), cout=>cout);
 
 END my_structure;
