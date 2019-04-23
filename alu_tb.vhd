@@ -73,6 +73,19 @@ UUT: entity work.alu port map(aluop=>aluop_s, funccode=>funccode_s, a=>a_s,
         b_s <= x"10932498";
         wait for 10 ns;
         
+        -- op 11 - used for or immediate
+        aluop_s <= "11";
+        
+        a_s <= x"00000002";
+        b_s <= x"00000001";
+        wait for 10 ns;
+        a_s <= x"9123F302";
+        b_s <= x"11111111";
+        wait for 10 ns;
+        a_s <= x"F4873ABC";
+        b_s <= x"10932498";
+        wait for 10 ns;
+        
         -- R type section
         aluop_s <= "10";
         
@@ -128,7 +141,17 @@ UUT: entity work.alu port map(aluop=>aluop_s, funccode=>funccode_s, a=>a_s,
         wait for 10 ns;
         
         a_s <= x"18347938";
-        b_s <= x"23492748";
+        b_s <= x"43492748";
+        wait for 10 ns;
+		
+		-- overflow positive - negative
+		a_s <= x"78347938";
+        b_s <= x"f0000048";
+        wait for 10 ns;
+		
+		-- overflow negative - positive
+		a_s <= x"f0000048";
+        b_s <= x"70192384";
         wait for 10 ns;
         
         -- R type SLL

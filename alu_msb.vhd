@@ -34,5 +34,16 @@ begin
 			  result_add when operation = "10" else 
 			  less       when operation = "11";
 	
-	set <= result_add;
+	slt_process: process(result_add, a, b)
+	begin
+	   -- a is negative and b is positive, less than
+	   if a = '1' and b = '0' then
+	       set <= '1';
+	   -- a positive, b negative, not less than
+	   elsif a = '0' and b = '1' then
+	       set <= '0';
+	   else
+	       set <= result_add;
+	   end if;
+	end process slt_process;
 end arch;

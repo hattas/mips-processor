@@ -41,6 +41,8 @@ begin
 				when "1010" => aluctl <= "0111"; --slt
 				when others => aluctl <= "XXXX"; --shouldn't happen
 			end case;
+		when others =>
+		  aluctl <= "XXXX";
 	end case;
 end process;
 
