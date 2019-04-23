@@ -28,43 +28,83 @@ begin
 
 	process(opcode, funct)
 	begin
-		r_type <= '1' when opcode = "000000" else '0';
+		if opcode = "000000" then
+			r_type <= '1';
+		else
+			r_type <= '0';
+		end if;
 		
-		regdst <= "01" when r_type = '1' else
-				  "10" when opcode = "000011" else
-				  "00";
+		if r_type = '1' then
+			regdst <= "01";
+		elsif opcode = "000011" then
+			regdst <= "10";
+		else
+			regdst <= "00";
+		end if;
 		
-		jump <= '1' when r_type = '1' and funct = "001000" else
-				'1' when opcode = "000011" else
-				'0';
+		if (r_type = '1' and funct = "001000") or opcode = "000011" then
+			jump <= '1';
+		else
+			jump <= '0';
+		end if;
 		
-		branch <= '1' when opcode = "000100" else '0';
+		if opcode = "000100" then
+			branch <= '1';
+		else
+			branch <= '0';
+		end if;
 		
-		memread <= '1' when opcode = "100011" else '0';
 		
-		regdatasel <= "10" when opcode = "001111" else
-		              "01" when opcode = "100011" else
-					  "11" when opcode = "000011" else
-					  "00";
+		if opcode = "100011" then
+			memread <= '1';
+		else
+			memread <= '0';
+		end if;
 		
-		aluop <= "11" when opcode = "001101" else
-				 "00" when opcode = "001000" else
-				 "01" when opcode = "000100" else
-				 "10";
-				 
-		memwrite <= '1' when opcode = "101011" else '0';
+		if opcode = "001111" then
+			regdatasel <= "10";
+		elsif opcode = "100011" then
+			regdatasel <= "01";
+		elsif opcode = "000011" then
+			regdatasel <= "11";
+		else
+			regdatasel <= "00";
+		end if;
 		
-		alusrca <= '1' when r_type = '1' and (opcode = "000000" or opcode = "000010") else
-				   '0';
+		if opcode = "001101" then
+			aluop <= "11";
+		elsif opcode = "001000" then
+			aluop <= "00";
+		elsif opcode = "000100" then
+			aluop <= "01";
+		else
+			aluop <= "10";
+		end if;
 		
-		alusrcb <= '1' when opcode = "001000" else
-				   '1' when opcode = "001101" else
-				   '0';
+		if opcode = "101011" then
+			memwrite <= '1';
+		else
+			memwrite <= '0';
+		end if;
 		
-		regwrite <= '0' when opcode = "101011" else
-					'0' when opcode = "000100" else
-					'0' when opcode = "000011" else
-					'1';
+		if r_type = '1' and (opcode = "000000" or opcode = "000010") then
+			alusrca <= '1';
+		else
+			alusrca <= '0';
+		end if;
+		
+		if opcode = "001000" or opcode = "001101" then
+			alusrcb <= '1';
+		else
+			alusrcb <= '0';
+		end if;
+		
+		if opcode = "101011" or opcode = "000100" or opcode = "000011" then
+			regwrite <= '0';
+		else
+			regwrite <= '1';
+		end if;
+		
 	end process;
 	
 end arch;
