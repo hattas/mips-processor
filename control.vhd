@@ -16,6 +16,7 @@ entity control is
 		memwrite: out std_logic;
 		alusrc: out std_logic;
 		regwrite: out std_logic;
+		luiwrite: out std_logic;
 		funct: in std_logic_vector(5 downto 0)
 	);
 end control;
@@ -25,72 +26,77 @@ begin
 
 process(instruction)
 begin
+    regdst <= "00";
+    jump <= '0';
+    branch <= '0';
+    memread <='0';
+    memtoreg <= "00";
+    aluop <= "00";
+    memwrite <= '0';
+    alusrc <= '0';
+    regwrite <= '0';
+    luiwrite <= '0';
+    
+    
+    
+    luiwrite <= '0';
 	-- R type
 	if instruction = "000000" then
-		regdst <= "01";
-		jump <= '0';
-		branch <= '0';
-		memread <= '0';
-		memtoreg <= "00";
-		aluop <= "10";
-		memwrite <= '0';
-		alusrc <= '0';
-		regwrite <= '1';
+	   if funct = "001000" then
+	       regdst <= "XX";
+	       jump <= '1';
+	       memtoreg <= "XX";
+	       aluop <= "XX";
+	       regwrite <= '1';
+	    else   
+		  regdst <= "01";
+		  aluop <= "10";
+		  regwrite <= '1';
+		end if;
 	-- lw
 	elsif instruction = "100011" then
 		regdst <= "00";
-		jump <= '0';
-		branch <= '0';
 		memread <= '1';
 		memtoreg <= "01";
-		aluop <= "00";
-		memwrite <= '0';
 		alusrc <= '1';
 		regwrite <= '1';
 	-- sw
 	elsif instruction = "101011" then
 		regdst <= "XX";
-		jump <= '0';
-		branch <= '0';
-		memread <= '0';
 		memtoreg <= "XX";
-		aluop <= "00";
 		memwrite <= '1';
 		alusrc <= '1';
-		regwrite <= '0';
 	-- beq
 	elsif instruction = "000100" then
 		regdst <= "XX";
-		jump <= '0';
 		branch <= '1';
-		memread <= '0';
 		memtoreg <= "XX";
 		aluop <= "01";
-		memwrite <= '0';
-		alusrc <= '0';
-		regwrite <= '0';
 	-- addi
 	elsif instruction = "001000" then
-		regdst <= "00";
-		jump <= '0';
-		branch <= '0';
-		memread <= '0';
-		memtoreg <= "00";
 		aluop <= "10"; -- addition, check
-		memwrite <= '0';
 		alusrc <= '1';
 		regwrite <= '1';
 	-- ori
 	elsif instruction = "001101" then
-		regdst <= "00";
-		jump <= '0';
-		branch <= '0';
-		memread <= '0';
-		memtoreg <= "00";
-		aluop <= "00"; -- or, check
-		memwrite <= '0';
 		alusrc <= '1';
 		regwrite <= '1';
+    --jal
+    elsif instruction = "000011" then
+        regdst <= "10";
+        jump <= '1';
+        branch <= 'X';
+        memtoreg <= "10";
+        aluop <= "XX";
+        alusrc <= 'X';
+        regwrite <= '1';
+     --lui
+     elsif instruction = "001111" then
+        luiwrite <= '1';
+        memread <= 'X';
+        aluop <= "11";
+        alusrc <= '1';
+        regwrite <= '1';
 	end if;
 end process;
 	
