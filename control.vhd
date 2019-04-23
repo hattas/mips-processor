@@ -57,7 +57,7 @@ begin
 		  if funct = "000000" or funct = "000010" then 
 		      alusrca <= '1';  
 		  end if;
-		end if;
+	end if;
 	-- lw
 	elsif instruction = "100011" then
 		regdst <= "00";
