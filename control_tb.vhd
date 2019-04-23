@@ -46,8 +46,10 @@ architecture Behavioral of control_tb is
             memtoreg: out std_logic_vector(1 downto 0);
             aluop: out std_logic_vector(1 downto 0);
             memwrite: out std_logic;
-            alusrc: out std_logic;
+            alusrca: out std_logic;
+            alusrcb: out std_logic;
             regwrite: out std_logic;
+            luiwrite: out std_logic;
             funct: in std_logic_vector(5 downto 0)
         );
     end component;
@@ -60,15 +62,17 @@ architecture Behavioral of control_tb is
     signal memtoreg_s: std_logic_vector(1 downto 0);
     signal aluop_s: std_logic_vector(1 downto 0);
     signal memwrite_s: std_logic;
-    signal alusrc_s: std_logic;
+    signal alusrca_s: std_logic;
+    signal alusrcb_s: std_logic;
     signal regwrite_s: std_logic;
+    signal luiwrite_s: std_logic;
     signal funct_s: std_logic_vector(5 downto 0);
 
 begin
 UUT: control port map(instruction=>instruction_s, regdst=>regdst_s,
                 jump=>jump_s, branch=>branch_s, memread=>memread_s,
-                memtoreg=>memtoreg_s, aluop=>aluop_s,
-                memwrite=>memwrite_s, alusrc=>alusrc_s,
+                memtoreg=>memtoreg_s, aluop=>aluop_s, luiwrite=>luiwrite_s,
+                memwrite=>memwrite_s, alusrca=>alusrca_s, alusrcb=>alusrcb_s,
                 regwrite=>regwrite_s, funct=>funct_s);
                 
     process

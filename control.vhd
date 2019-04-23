@@ -14,7 +14,8 @@ entity control is
 		memtoreg: out std_logic_vector(1 downto 0);
 		aluop: out std_logic_vector(1 downto 0);
 		memwrite: out std_logic;
-		alusrc: out std_logic;
+		alusrca: out std_logic;
+		alusrcb: out std_logic;
 		regwrite: out std_logic;
 		luiwrite: out std_logic;
 		funct: in std_logic_vector(5 downto 0)
@@ -33,7 +34,8 @@ begin
     memtoreg <= "00";
     aluop <= "00";
     memwrite <= '0';
-    alusrc <= '0';
+    alusrca <= '0';
+    alusrcb <= '0';
     regwrite <= '0';
     luiwrite <= '0';
     
@@ -52,20 +54,23 @@ begin
 		  regdst <= "01";
 		  aluop <= "10";
 		  regwrite <= '1';
+		  if funct = "000000" or funct = "000010" then 
+		      alusrca <= '1';  
+		  end if;
 		end if;
 	-- lw
 	elsif instruction = "100011" then
 		regdst <= "00";
 		memread <= '1';
 		memtoreg <= "01";
-		alusrc <= '1';
+		alusrcb <= '1';
 		regwrite <= '1';
 	-- sw
 	elsif instruction = "101011" then
 		regdst <= "XX";
 		memtoreg <= "XX";
 		memwrite <= '1';
-		alusrc <= '1';
+		alusrcb <= '1';
 	-- beq
 	elsif instruction = "000100" then
 		regdst <= "XX";
@@ -75,11 +80,11 @@ begin
 	-- addi
 	elsif instruction = "001000" then
 		aluop <= "10"; -- addition, check
-		alusrc <= '1';
+		alusrcb <= '1';
 		regwrite <= '1';
 	-- ori
 	elsif instruction = "001101" then
-		alusrc <= '1';
+		alusrcb <= '1';
 		regwrite <= '1';
     --jal
     elsif instruction = "000011" then
@@ -88,14 +93,14 @@ begin
         branch <= 'X';
         memtoreg <= "10";
         aluop <= "XX";
-        alusrc <= 'X';
+        alusrcb <= 'X';
         regwrite <= '1';
      --lui
      elsif instruction = "001111" then
         luiwrite <= '1';
         memread <= 'X';
         aluop <= "11";
-        alusrc <= '1';
+        alusrcb <= '1';
         regwrite <= '1';
 	end if;
 end process;
