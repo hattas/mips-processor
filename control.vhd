@@ -6,104 +6,65 @@ use IEEE.std_logic_1164.all;
 
 entity control is
 	port(
-		instruction: in std_logic_vector(5 downto 0);
+		opcode: in std_logic_vector(5 downto 0);
+		funct: in std_logic_vector(5 downto 0);
+		
 		regdst: out std_logic_vector(1 downto 0);
 		jump: out std_logic;
 		branch: out std_logic;
 		memread: out std_logic;
-		memtoreg: out std_logic_vector(1 downto 0);
+		regdatasel: out std_logic_vector(1 downto 0);
 		aluop: out std_logic_vector(1 downto 0);
 		memwrite: out std_logic;
 		alusrca: out std_logic;
 		alusrcb: out std_logic;
-		regwrite: out std_logic;
-		luiwrite: out std_logic;
-		funct: in std_logic_vector(5 downto 0)
+		regwrite: out std_logic
 	);
 end control;
 
 architecture arch of control is
+	signal r_type : std_logic := '0';
 begin
 
-process(instruction)
-begin
-    regdst <= "00";
-    jump <= '0';
-    branch <= '0';
-    memread <='0';
-    memtoreg <= "00";
-    aluop <= "00";
-    memwrite <= '0';
-    alusrca <= '0';
-    alusrcb <= '0';
-    regwrite <= '0';
-    luiwrite <= '0';
-    
-    
-    
-    luiwrite <= '0';
-	-- R type
-	if instruction = "000000" then
-	   if funct = "001000" then
-	       regdst <= "XX";
-	       jump <= '1';
-	       memtoreg <= "XX";
-	       aluop <= "XX";
-	       regwrite <= '1';
-	    else   
-		  regdst <= "01";
-		  aluop <= "10";
-		  regwrite <= '1';
-		  if funct = "000000" or funct = "000010" then 
-		      alusrca <= '1';  
-		  end if;
-	end if;
-	-- lw
-	elsif instruction = "100011" then
-		regdst <= "00";
-		memread <= '1';
-		memtoreg <= "01";
-		alusrcb <= '1';
-		regwrite <= '1';
-	-- sw
-	elsif instruction = "101011" then
-		regdst <= "XX";
-		memtoreg <= "XX";
-		memwrite <= '1';
-		alusrcb <= '1';
-	-- beq
-	elsif instruction = "000100" then
-		regdst <= "XX";
-		branch <= '1';
-		memtoreg <= "XX";
-		aluop <= "01";
-	-- addi
-	elsif instruction = "001000" then
-		aluop <= "10"; -- addition, check
-		alusrcb <= '1';
-		regwrite <= '1';
-	-- ori
-	elsif instruction = "001101" then
-		alusrcb <= '1';
-		regwrite <= '1';
-    --jal
-    elsif instruction = "000011" then
-        regdst <= "10";
-        jump <= '1';
-        branch <= 'X';
-        memtoreg <= "10";
-        aluop <= "XX";
-        alusrcb <= 'X';
-        regwrite <= '1';
-     --lui
-     elsif instruction = "001111" then
-        luiwrite <= '1';
-        memread <= 'X';
-        aluop <= "11";
-        alusrcb <= '1';
-        regwrite <= '1';
-	end if;
-end process;
+	process(opcode, funct)
+	begin
+		r_type <= '1' when opcode = "000000" else '0';
+		
+		regdst <= "01" when r_type = '1' else
+				  "10" when opcode = "000011" else
+				  "00";
+		
+		jump <= '1' when r_type = '1' and funct = "001000" else
+				'1' when opcode = "000011" else
+				'0';
+		
+		branch <= '1' when opcode = "000100" else '0';
+		
+		memread <= '1' when opcode = "100011" else '0';
+		
+		regdatasel <= "10" when opcode = "001111" else
+		              "01" when opcode = "100011" else
+					  "11" when opcode = "000011" else
+					  "00";
+		
+		aluop <= "11" when opcode = "001101" else
+				 "00" when opcode = "001000" else
+				 "01" when opcode = "000100" else
+				 "10";
+				 
+		memwrite <= '1' when opcode = "101011" else '0';
+		
+		alusrca <= '1' when r_type = '1' and (opcode = "000000" or opcode = "000010") else
+				   '0';
+		
+		alusrcb <= '1' when opcode = "001000" else
+				   '1' when opcode = "001101" else
+				   '0';
+		
+		regwrite <= '0' when opcode = "101011" else
+					'0' when opcode = "000100" else
+					'0' when opcode = "000011" else
+					'1';
+	end process;
 	
-
 end arch;

@@ -34,21 +34,21 @@ begin
 		wait for 10 ns;
 		
 		-- carry out test
-		cini <= '0'
-		ai <= "ffffffff";
-		bi <= "00000001";
+		cini <= '0';
+		ai <= x"ffffffff";
+		bi <= x"00000001";
 		wait for 10 ns;
 		
 		-- carry out and carry in test
-		cini <= '1'
-		ai <= "ffffffff";
-		bi <= "00000000";
+		cini <= '1';
+		ai <= x"ffffffff";
+		bi <= x"00000000";
 		wait for 10 ns;
 		
 		-- general test
-		cini <= '0'
-		ai <= "194ad342";
-		bi <= "5be9485f";
+		cini <= '0';
+		ai <= x"194ad342";
+		bi <= x"5be9485f";
 		wait for 10 ns;
 		
     end process;
