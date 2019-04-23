@@ -164,12 +164,12 @@ UUT: entity work.alu port map(aluop=>aluop_s, funccode=>funccode_s, a=>a_s,
         wait for 10 ns;
         
         -- shift left by 2
-        a_s <= x"00000010";
+        a_s <= x"00000002";
         b_s <= x"FDB97531";
         wait for 10 ns;
         
         -- shift left by 16
-        a_s <= x"00010000";
+        a_s <= x"00000010";
         b_s <= x"FDB97531";
         wait for 10 ns;
         
