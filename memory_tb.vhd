@@ -22,7 +22,6 @@ architecture Behavioral of memory_tb is
             signal address_s: std_logic_vector(5 downto 0);
             signal data_s: std_logic_vector(31 downto 0);
             signal write_enable_s: std_logic;
-            signal reset_s: std_logic;
             signal clk_s: std_logic := '0';
             signal output_s: std_logic_vector(31 downto 0);
 begin
@@ -32,22 +31,28 @@ begin
                     clk=>clk_s, output=>output_s);
     process
     begin
+		-- write 8 to address 8
         write_enable_s <= '1';
         address_s <= "001000";
-        data_s <= X"00001000";
-        reset_s <= '0';
+        data_s <= x"00000008";
         wait for 10 ns;
         
+		-- write 2 to address 2
         write_enable_s <= '1';
         address_s <= "000010";
-        data_s<= X"00000001";
-        reset_s <= '1';
+        data_s<= x"00000002";
         wait for 10 ns;
         
+		-- read from address 8
+		-- expected output_s: 8
         write_enable_s <= '0';
-        address_s <= "000100";
-        data_s<= X"00000010";
-        reset_s <= '1';
+        address_s <= "001000";
+        wait for 10 ns;
+		
+		-- read from address 2
+		-- expected output_s: 2
+        write_enable_s <= '0';
+        address_s <= "001000";
         wait for 10 ns;
     end process;
 end Behavioral;

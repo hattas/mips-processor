@@ -51,7 +51,9 @@ begin
         write_data_s <= x"98765432";
         wait for 10 ns;
         
-        -- read from register 1 to register 2
+        -- read from register 5 and 31
+		-- register 5 should be 0
+		-- register 31 should conain written data value from previous step
         write_enable_s <= '0';
         read_reg1_s <= "00101";
         read_reg2_s <= "11111";
