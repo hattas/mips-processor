@@ -1,7 +1,12 @@
--- 32 bit ALU
--- this component instantiates 32 1 bit alu components
--- it operates on 2 inputs of length 32
--- it outputs the result as well as various flags
+----------------------------------------------------------------------------------
+--
+-- file: alu32bit.vhd
+-- authors: Kyle Chang, John Hattas, Patrick Woodford
+-- created: 4/8/19
+-- description: This is the 32 bit ALU that instantiates 32 1 bit ALUs.
+--    	The most significant bit uses the alu_msb to allow for overflow or less than detection.
+-- 
+----------------------------------------------------------------------------------
 
 library IEEE;
 use IEEE.std_logic_1164.all;

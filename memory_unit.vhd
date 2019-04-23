@@ -1,6 +1,12 @@
--- register file
--- maybe use array of std_logic_vector?
--- use the address input to index into the array to get the data?
+----------------------------------------------------------------------------------
+--
+-- file: memory_unit.vhd
+-- authors: Kyle Chang, John Hattas, Patrick Woodford
+-- created: 4/12/19
+-- description: This is a 64x32 top level SRAM unit.
+-- 		The memory is preloaded to be all zeros.
+-- 
+----------------------------------------------------------------------------------
 
 
 library IEEE;

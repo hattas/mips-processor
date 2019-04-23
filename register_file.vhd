@@ -1,4 +1,13 @@
--- register file
+----------------------------------------------------------------------------------
+--
+-- file: register_file.vhd
+-- authors: Kyle Chang, John Hattas, Patrick Woodford
+-- created: 4/8/19
+-- description: Top level register file.  Contains 32 registers.
+-- 		You can write one at a time and read 2 at a time.
+--      Writes are synchronous and reads are asynchronous.
+-- 
+----------------------------------------------------------------------------------
 
 library IEEE;
 use IEEE.std_logic_1164.all;

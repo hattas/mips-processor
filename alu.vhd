@@ -1,5 +1,13 @@
--- top level alu
--- contains 32 bit alu and alu control
+----------------------------------------------------------------------------------
+--
+-- file: alu.vhd
+-- authors: Kyle Chang, John Hattas, Patrick Woodford
+-- created: 4/9/19
+-- description: Top level ALU.  This contains the 32 bit ALU and the alu control.
+-- 		The alu control generates signals and are fed to the 32 bit ALU
+-- 		Shift support is also done inside the top level ALU.
+-- 
+----------------------------------------------------------------------------------
 
 library IEEE;
 use IEEE.std_logic_1164.all;

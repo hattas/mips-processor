@@ -1,4 +1,11 @@
--- 1-bit full adder
+----------------------------------------------------------------------------------
+--
+-- file: full_adder.vhd
+-- authors: Kyle Chang, John Hattas, Patrick Woodford
+-- created: 4/8/19
+-- description: This is a simple 1 bit full adder used in the 32 bit adder and ALU.
+-- 
+----------------------------------------------------------------------------------
 
 library IEEE;
 use IEEE.std_logic_1164.all;

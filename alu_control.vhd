@@ -1,10 +1,15 @@
--- alu control unit
--- takes in aluop and function and determines alu control bits
--- aluctl is 4 bits and is as follows
--- aluctl(3) is ainvert
--- aluctl(2) is bnegate
--- aluctl(1 downto 0) is operation
--- based on truth table on page 261
+----------------------------------------------------------------------------------
+--
+-- file: alu_control.vhd
+-- authors: Kyle Chang, John Hattas, Patrick Woodford
+-- created: 4/8/19
+-- description: ALU control unit used to determin ALU control bits
+-- 		aluctl is 4 bits and is as follows
+-- 		aluctl(3) is ainvert
+-- 		aluctl(2) is bnegate
+-- 		aluctl(1 downto 0) is operation
+-- 		based on truth table on page 261
+----------------------------------------------------------------------------------
 
 library IEEE;
 use IEEE.std_logic_1164.all;

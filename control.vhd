@@ -1,5 +1,12 @@
-
--- control unit
+----------------------------------------------------------------------------------
+--
+-- file: control.vhd
+-- authors: Kyle Chang, John Hattas, Patrick Woodford
+-- created: 4/9/19
+-- description: This is the top level control unit.
+-- 		It takes in the function and op code and returns all control signals.
+-- 
+----------------------------------------------------------------------------------
 
 library IEEE;
 use IEEE.std_logic_1164.all;

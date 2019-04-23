@@ -1,6 +1,11 @@
--- 1 bit alu
--- performs 3 operations, and, or, and add
--- 4 input mux selects between and, or, add and less
+----------------------------------------------------------------------------------
+--
+-- file: alu1bit.vhd
+-- authors: Kyle Chang, John Hattas, Patrick Woodford
+-- created: 4/8/19
+-- description: Simple 1 bit ALU, based on page B-33 of Computer Organization and Design.
+-- 
+----------------------------------------------------------------------------------
 
 library IEEE;
 use IEEE.std_logic_1164.all;

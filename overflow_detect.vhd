@@ -1,7 +1,12 @@
--- overflow detection unit
--- outputs overflow when:
--- inputs are both positive and result is negative
--- or inputs are negative and result is positive
+----------------------------------------------------------------------------------
+--
+-- file: overflow_detect.vhd
+-- authors: Kyle Chang, John Hattas, Patrick Woodford
+-- created: 4/9/19
+-- description: Unit to detect overflow in the msb 1 bit alu.
+--  	Overflow is 1 when 2 positives result in negative or vice versa.
+-- 
+----------------------------------------------------------------------------------
 
 library IEEE;
 use IEEE.std_logic_1164.all;

@@ -1,4 +1,11 @@
--- 32-bit adder
+----------------------------------------------------------------------------------
+--
+-- file: adder_32bit.vhd
+-- authors: Kyle Chang, John Hattas, Patrick Woodford
+-- created: 4/9/19
+-- description: This 32 bit adder instantiates 32 1 bit full adders.
+-- 
+----------------------------------------------------------------------------------
 
 LIBRARY IEEE;
 use IEEE.STD_LOGIC_1164.ALL;

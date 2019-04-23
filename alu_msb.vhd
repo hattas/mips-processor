@@ -1,6 +1,12 @@
--- 1 bit alu for most significant bit
--- adds overflow detection
--- has set output for slt
+----------------------------------------------------------------------------------
+--
+-- file: alu_msb.vhd
+-- authors: Kyle Chang, John Hattas, Patrick Woodford
+-- created: 4/8/19
+-- description: 1 bit ALU for the most significant bit.
+-- 		Same function as 1 bit ALU but it has overflow detection and slt support.
+-- 
+----------------------------------------------------------------------------------
 
 library IEEE;
 use IEEE.std_logic_1164.all;
