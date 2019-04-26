@@ -3,7 +3,7 @@
 -- File: mux2.vhd
 -- Authors: Kyle Chang, John Hattas, Patrick Woodford
 -- Created: 4/25/19
--- Description: 2 input mux with 1 bit select.
+-- Description: 2 input 32 bit mux with 1 bit select.
 -- 
 ----------------------------------------------------------------------------------
 

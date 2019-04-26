@@ -2,8 +2,8 @@
 --
 -- File: mux4.vhd
 -- Authors: Kyle Chang, John Hattas, Patrick Woodford
--- Created: 4/21/19
--- Description: 4 input mux with 2 bit select.
+-- Created: 4/25/19
+-- Description: 4 input 32 bit mux with 2 bit select.
 -- 
 ----------------------------------------------------------------------------------
 
