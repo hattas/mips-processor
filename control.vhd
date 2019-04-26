@@ -34,7 +34,7 @@ architecture arch of control is
 	signal r_type : std_logic := '0';
 begin
 
-	process(opcode, funct)
+	process(opcode, funct, r_type)
 	begin
 		if opcode = "000000" then
 			r_type <= '1';
