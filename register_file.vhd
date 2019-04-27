@@ -18,7 +18,8 @@ entity register_file is
         clock, write_enable : in std_logic;
         read_reg1, read_reg2, write_reg : in std_logic_vector(4 downto 0);
         write_data : in std_logic_vector(31 downto 0);
-        read_data1, read_data2 : out std_logic_vector(31 downto 0)
+        read_data1, read_data2 : out std_logic_vector(31 downto 0);
+		t6 : out std_logic_vector(31 downto 0)
     );
 end register_file;
 
@@ -52,6 +53,7 @@ begin
         -- asynchronous continuous read of the data memory location at address var_addr
         read_data1 <= var_data(var_read_reg1);
         read_data2 <= var_data(var_read_reg2);
+		t6 <= var_data(14);
     end process;
 
 end arch;

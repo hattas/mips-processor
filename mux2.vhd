@@ -22,5 +22,6 @@ architecture arch of mux2 is
 begin
 	with sel select output <=
 		in0 when '0',
-		in1 when '1';
+		in1 when '1',
+		x"00000000" when others;
 end arch;

@@ -20,7 +20,7 @@ end top;
 architecture arch of top is
 
     -- program counter
-    signal pc : std_logic_vector(31 downto 0);
+    signal pc : std_logic_vector(31 downto 0) := (others => '0');
 	signal pcplus4 : std_logic_vector(31 downto 0);
 	signal pcplus8 : std_logic_vector(31 downto 0);
     
@@ -63,6 +63,7 @@ architecture arch of top is
 		
 	-- intermediate misc. signals
 	signal branch_sel : std_logic;
+	signal t6 : std_logic_vector(31 downto 0);
 	
 	-- multiplexor outputs (top right of datapath)
 	signal branch_mux_output : std_logic_vector(31 downto 0);
@@ -95,7 +96,7 @@ begin
 		jumpreg => jumpreg
 	);
 	
-	instruction_memory: entity work.memory_unit port map(
+	instruction_memory: entity work.memory_unit(inst_arch) port map(
 		clk => clk,
 		address => pc(5 downto 0), -- take 6 lsbs because we only have 64 memory words
 		data => x"00000000",
@@ -111,7 +112,8 @@ begin
 		write_reg => write_reg,
 		write_data => write_data,
 		read_data1 => read_data1,
-		read_data2 => read_data2
+		read_data2 => read_data2,
+		t6 => t6
 	);
 	
 	alu_unit: entity work.alu port map(
@@ -125,7 +127,7 @@ begin
 		carryout => open
 	);
 	
-	data_memory: entity work.memory_unit port map(
+	data_memory: entity work.memory_unit(data_arch) port map(
 		clk => clk,
 		address => alu_result(5 downto 0), -- take 6 lsbs because we only have 64 memory words
 		data => read_data2,
@@ -138,7 +140,7 @@ begin
 	adder_pc4: entity work.adder port map(--
 		cin => '0',
 		a => pc,
-		b => x"00000004",
+		b => x"00000001",
 		z => pcplus4,
 		cout => open
 	);
@@ -146,7 +148,7 @@ begin
 	adder_pc8: entity work.adder port map(--
 		cin => '0',
 		a => pc,
-		b => x"00000008",
+		b => x"00000002",
 		z => pcplus8,
 		cout => open
 	);
@@ -243,6 +245,9 @@ begin
 	
 	-- jump address is an offset from the PC's next value
 	jump_address <= pcplus4(31 downto 28) & address & "00";
+	
+	-- assign lsb's 
+	led <= t6(15 downto 0);
 	----- END SIGNAL ASSIGNMENTS -----
 	
 	-- update PC on rising edge of the clock with the
