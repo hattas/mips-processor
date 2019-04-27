@@ -65,9 +65,18 @@ architecture inst_arch of memory_unit is
 
 		type MEM_ARRAY_64x32 is array(0 to 63) of std_logic_vector(31 downto 0);
 		signal memory_array:MEM_ARRAY_64x32 :=(
-		  x"20100000", x"8e090000", x"8e0a0001", x"8e0b0003",
-		  x"012a6020", x"012a6820", x"116cfffb", x"016c6820",
-		  x"ae0d0004", x"8e0e0004", x"00000000", x"00000000",
+		  -- mips program
+		  x"8e090000", -- lw   $t1, 0($s0)
+		  x"8e0a0001", -- lw   $t2, 1($s0)
+		  x"8e0b0003", -- lw   $t3, 3($s0)
+		  x"012a6020", -- add  $t4, $t1, $t2 #t4 = t1 + t2
+		  x"012a6820", -- add  $t5, $t1, $t2 #t5 = t1 + t2
+		  x"116cfffc", -- beq  $t3, $t4, two # branch if t1 + t2 = t3
+		  x"016c6820", -- add  $t5, $t3, $t4 # t5 = t3 + t4 = t1 + t2 + t3
+		  x"ae0d0004", -- sw   $t5, 4($s0)
+		  x"8e0e0004", -- lw   $t6, 4($s0)
+		  
+		  x"00000000", x"00000000", x"00000000",
 		  x"00000000", x"00000000", x"00000000", x"00000000",
 		  
 		  x"00000000", x"00000000", x"00000000", x"00000000",
