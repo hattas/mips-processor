@@ -78,7 +78,9 @@ architecture arch of top is
 	signal immediate_appended : std_logic_vector(31 downto 0);
 	signal shamt_extended : std_logic_vector(31 downto 0);
 	
-	signal pccount : integer := 0;
+	-- clocks
+	signal clk_1Hz : std_logic := '0';
+	signal clk_mips : std_logic := '0';
 begin
 	----- MAIN COMPONENTS -----
 	-- control, instruction memory, registers, ALU, and data memory
@@ -99,7 +101,7 @@ begin
 	);
 	
 	instruction_memory: entity work.memory_unit(inst_arch) port map(
-		clk => clk,
+		clk => clk_mips,
 		address => pc(5 downto 0), -- take 6 lsbs because we only have 64 memory words
 		data => x"00000000",
 		write_enable => '0',
@@ -107,7 +109,7 @@ begin
 	);
 	
 	register_unit: entity work.register_file port map(
-		clock => clk,
+		clock => clk_mips,
 		write_enable => regwrite,
 		read_reg1 => rs,
 		read_reg2 => rt,
@@ -130,7 +132,7 @@ begin
 	);
 	
 	data_memory: entity work.memory_unit(data_arch) port map(
-		clk => clk,
+		clk => clk_mips,
 		address => alu_result(5 downto 0), -- take 6 lsbs because we only have 64 memory words
 		data => read_data2,
 		write_enable => memwrite,
@@ -165,62 +167,48 @@ begin
 	----- END ADDERS -----
 	
 	----- 2 INPUT MULTIPLEXERS -----
-	mux2_branch: entity work.mux2 port map(
-		sel => branch_sel,
-		in0 => pcplus4,
-		in1 => branch_adder_result,
-		output => branch_mux_output
-	);
+	with branch_sel select branch_mux_output <=
+	   pcplus4 when '0',
+	   branch_adder_result when '1',
+	   (others => 'X') when others;
 	
-	mux2_jump: entity work.mux2 port map(
-		sel => jump,
-		in0 => branch_mux_output,
-		in1 => jump_address,
-		output => jump_mux_output
-	);
+	with jump select jump_mux_output <=
+        branch_mux_output when '0',
+        jump_address when '1',
+        (others => 'X') when others;
+    
+    with jumpreg select jumpreg_mux_output <=
+        jump_mux_output when '0',
+        read_data1 when '1',
+        (others => 'X') when others;
+        
+	with alusrca select alu_in_a <=
+        read_data1 when '0',
+        shamt_extended when '1',
+        (others => 'X') when others;
 	
-	mux2_jumpreg: entity work.mux2 port map(
-		sel => jumpreg,
-		in0 => jump_mux_output,
-		in1 => read_data1,
-		output => jumpreg_mux_output
-	);
-	
-	mux2_alusrca: entity work.mux2 port map(
-		sel => alusrca,
-		in0 => read_data1,
-		in1 => shamt_extended,
-		output => alu_in_a
-	);
-	
-	mux2_alusrcb: entity work.mux2 port map(
-		sel => alusrcb,
-		in0 => read_data2,
-		in1 => immediate_extended,
-		output => alu_in_b
-	);
+	with alusrcb select alu_in_b <=
+        read_data2 when '0',
+        immediate_extended when '1',
+        (others => 'X') when others;
 	----- END 2 INPUT MULTIPLEXERS -----
 	
 	----- 4 INPUT MULTIPLEXERS -----
 	-- select data to write to the register
-	mux4_regdata: entity work.mux4 port map(
-		sel => regdatasel,
-		in0 => alu_result,
-		in1 => dm_read_data,
-		in2 => immediate_appended,
-		in3 => pcplus8,
-		output => write_data
-	);
+	with regdatasel select write_data <=
+        alu_result when "00",
+        dm_read_data when "01",
+        immediate_appended when "10",
+        pcplus8 when "11",
+        (others => 'X') when others;
 	
 	-- select destination register to write data to
-	mux4_regdst: entity work.mux4_5bit port map(--
-		sel => regdst,
-		in0 => rt,
-		in1 => rd,
-		in2 => "11111", -- 31
-		in3 => "XXXXX",
-		output => write_reg
-	);
+	with regdst select write_reg <=
+        rt when "00",
+        rd when "01",
+        "11111" when "10", --31
+        "XXXXX" when "11",
+        (others => 'X') when others;
 	----- END 4 INPUT MULTIPLEXERS -----
 	
 	----- SIGNAL ASSIGNMENTS -----
@@ -251,12 +239,14 @@ begin
 	-- assign lsb's 
 	led <= t6(15 downto 0);
 	----- END SIGNAL ASSIGNMENTS -----
-	
+	-- clock division
+	clk_div_unit: entity work.clk_divider port map(clk_in=>clk, clk_out=>clk_1Hz);
+	clk_mips <= clk_1Hz;
 	-- update PC on rising edge of the clock with the
 	-- output of the series of branch/jump MUXes
-	process (clk)
+	process (clk_mips)
 	begin
-		if falling_edge(clk) and unsigned(jumpreg_mux_output) < 10 then
+		if falling_edge(clk_mips) and unsigned(jumpreg_mux_output) < 9 then
 			  pc <= jumpreg_mux_output;
 		end if;
 	end process;
