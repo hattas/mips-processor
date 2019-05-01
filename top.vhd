@@ -237,7 +237,8 @@ begin
 	jump_address <= pcplus4(31 downto 28) & address & "00";
 	
 	-- assign lsb's 
-	led <= t6(15 downto 0);
+	led(14 downto 0) <= t6(14 downto 0);
+	led(15) <= clk_mips;
 	----- END SIGNAL ASSIGNMENTS -----
 	-- clock division
 	clk_div_unit: entity work.clk_divider port map(clk_in=>clk, clk_out=>clk_1Hz);
