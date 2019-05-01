@@ -81,7 +81,7 @@ begin
 		
 		if opcode = "001101" then
 			aluop <= "11";
-		elsif opcode = "001000" then
+		elsif opcode = "001000" or opcode = "100011" or opcode = "101011" then
 			aluop <= "00";
 		elsif opcode = "000100" then
 			aluop <= "01";
@@ -95,13 +95,13 @@ begin
 			memwrite <= '0';
 		end if;
 		
-		if r_type = '1' and (opcode = "000000" or opcode = "000010") then
+		if r_type = '1' and (funct = "000000" or funct = "000010") then
 			alusrca <= '1';
 		else
 			alusrca <= '0';
 		end if;
 		
-		if opcode = "001000" or opcode = "001101" then
+		if opcode = "001000" or opcode = "001101" or opcode = "100011" or opcode = "101011" then
 			alusrcb <= '1';
 		else
 			alusrcb <= '0';

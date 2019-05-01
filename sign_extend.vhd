@@ -20,6 +20,7 @@ end sign_extend;
 architecture arch of sign_extend is
 	signal sign : std_logic;
 begin
+    sign <= input(15);
     process(sign, input)
     begin
         if sign = '0' then

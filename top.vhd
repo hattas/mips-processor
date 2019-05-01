@@ -9,6 +9,7 @@
 
 library IEEE;
 use IEEE.std_logic_1164.all;
+use ieee.numeric_std.all;
 
 entity top is
     port (
@@ -77,6 +78,7 @@ architecture arch of top is
 	signal immediate_appended : std_logic_vector(31 downto 0);
 	signal shamt_extended : std_logic_vector(31 downto 0);
 	
+	signal pccount : integer := 0;
 begin
 	----- MAIN COMPONENTS -----
 	-- control, instruction memory, registers, ALU, and data memory
@@ -254,8 +256,8 @@ begin
 	-- output of the series of branch/jump MUXes
 	process (clk)
 	begin
-		if rising_edge(clk) then
-			pc <= jumpreg_mux_output;
+		if falling_edge(clk) and unsigned(jumpreg_mux_output) < 10 then
+			  pc <= jumpreg_mux_output;
 		end if;
 	end process;
 	
