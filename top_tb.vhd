@@ -19,10 +19,8 @@ architecture Behavioral of top_tb is
 	constant half_period : time := 10 ns; -- 2 ns period
 	signal clk_s: std_logic := '0';
 	signal led_s : std_logic_vector(15 downto 0);
-	signal seg_s : std_logic_vector(6 downto 0) := (others => '1');
-	signal an_s : std_logic_vector(3 downto 0) := (others => '1');
 begin
     clk_s <= not clk_s after half_period;
 
-    UUT: entity work.top port map(clk=>clk_s, led=>led_s, seg=>seg_s, an=>an_s);
+    UUT: entity work.top port map(clk=>clk_s, led=>led_s);
 end Behavioral;

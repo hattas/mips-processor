@@ -14,9 +14,7 @@ use ieee.numeric_std.all;
 entity top is
     port (
 		clk : in std_logic;
-        led : out std_logic_vector (15 downto 0); -- LSBs of $t6
-        seg : out std_logic_vector(6 downto 0);
-        an : out std_logic_vector(3 downto 0)
+        led : out std_logic_vector (15 downto 0)
 	);
 end top;
 
@@ -80,13 +78,6 @@ architecture arch of top is
 	signal immediate_appended : std_logic_vector(31 downto 0);
 	signal shamt_extended : std_logic_vector(31 downto 0);
 	
-	-- clocks
-	signal clk_1Hz : std_logic := '0';
-	signal clk_mips : std_logic := '0'; -- clock to use for datapath, used to switch between 1Hz clock and main clock for testing
-	signal clk_seg : std_logic := '0';
-	
-	signal seg0, seg1 : std_logic_vector(6 downto 0);
-    signal seg_count : unsigned(1 downto 0) := (others => '0');
 begin
 	----- MAIN COMPONENTS -----
 	-- control, instruction memory, registers, ALU, and data memory
@@ -107,7 +98,7 @@ begin
 	);
 	
 	instruction_memory: entity work.memory_unit(inst_arch) port map(
-		clk => clk_mips,
+		clk => clk,
 		address => pc(5 downto 0), -- take 6 lsbs because we only have 64 memory words
 		data => x"00000000",
 		write_enable => '0',
@@ -115,7 +106,7 @@ begin
 	);
 	
 	register_unit: entity work.register_file port map(
-		clock => clk_mips,
+		clock => clk,
 		write_enable => regwrite,
 		read_reg1 => rs,
 		read_reg2 => rt,
@@ -138,7 +129,7 @@ begin
 	);
 	
 	data_memory: entity work.memory_unit(data_arch) port map(
-		clk => clk_mips,
+		clk => clk,
 		address => alu_result(5 downto 0), -- take 6 lsbs because we only have 64 memory words
 		data => read_data2,
 		write_enable => memwrite,
@@ -243,50 +234,14 @@ begin
 	jump_address <= pcplus4(31 downto 28) & address & "00";
 	
 	-- assign lsb's 
-	led(14 downto 0) <= t6(14 downto 0);
-	led(15) <= clk_mips;
+	led <= t6(15 downto 0);
 	----- END SIGNAL ASSIGNMENTS -----
-	-- clock division
-	clk_div_unit0: entity work.clk_divider port map(TIMECONST=>84, clk_in=>clk, clk_out=>clk_1hz);
-    clk_div_unit1: entity work.clk_divider port map(TIMECONST=>10, clk_in=>clk, clk_out=>clk_seg);
     
-    -- 7 seg units
-    seg_unit0: entity work.hex_to_sseg port map(hex=>std_logic_vector(pc(3 downto 0)), sseg=>seg0);
-    seg_unit1: entity work.hex_to_sseg port map(hex=>std_logic_vector(pc(7 downto 4)), sseg=>seg1);
-	clk_mips <= clk_1Hz;
-	
-	process(clk_seg)
-    begin
-        if rising_edge(clk_seg) then
-            seg_count <= seg_count + 1;
-        end if;
-    end process;
-    
-    process(seg_count, seg0, seg1)
-    begin
-        case seg_count is
-            when "00" =>
-                an <= "1110";
-                seg <= seg0;
-            when "01" =>
-                an <= "1101";
-                seg <= seg1;
-            when "10" =>
-                an <= "1011";
-                seg <= "1000110"; --c
-            when "11" =>
-                an <= "0111";
-                seg <= "0001100";
-            when others =>
-                an <= "1111";
-                seg <= (others => '1');
-        end case;
-    end process;
 	-- update PC on rising edge of the clock with the
 	-- output of the series of branch/jump MUXes
-	process (clk_mips)
+	process (clk)
 	begin
-		if falling_edge(clk_mips) and unsigned(jumpreg_mux_output) < 9 then
+		if falling_edge(clk) and unsigned(jumpreg_mux_output) < 9 then
 			  pc <= jumpreg_mux_output;
 		end if;
 	end process;

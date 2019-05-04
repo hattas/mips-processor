@@ -27,7 +27,7 @@ architecture data_arch of memory_unit is
 
 		type MEM_ARRAY_64x32 is array(0 to 63) of std_logic_vector(31 downto 0);
 		signal memory_array:MEM_ARRAY_64x32 :=(
-		  x"00000002", x"00000003", x"00000005", x"00000000",
+		  x"00000003", x"00000004", x"00000005", x"00000000",
 		  x"00000000", x"00000000", x"00000000", x"00000000",
 		  x"00000000", x"00000000", x"00000000", x"00000000",
 		  x"00000000", x"00000000", x"00000000", x"00000000",
