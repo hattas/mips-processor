@@ -14,7 +14,9 @@ use ieee.numeric_std.all;
 entity top is
     port (
 		clk : in std_logic;
-        led : out std_logic_vector (15 downto 0) -- LSBs of $t6
+        led : out std_logic_vector (15 downto 0); -- LSBs of $t6
+        seg : out std_logic_vector(6 downto 0);
+        an : out std_logic_vector(3 downto 0)
 	);
 end top;
 
@@ -80,7 +82,11 @@ architecture arch of top is
 	
 	-- clocks
 	signal clk_1Hz : std_logic := '0';
-	signal clk_mips : std_logic := '0';
+	signal clk_mips : std_logic := '0'; -- clock to use for datapath, used to switch between 1Hz clock and main clock for testing
+	signal clk_seg : std_logic := '0';
+	
+	signal seg0, seg1 : std_logic_vector(6 downto 0);
+    signal seg_count : unsigned(1 downto 0) := (others => '0');
 begin
 	----- MAIN COMPONENTS -----
 	-- control, instruction memory, registers, ALU, and data memory
@@ -241,8 +247,41 @@ begin
 	led(15) <= clk_mips;
 	----- END SIGNAL ASSIGNMENTS -----
 	-- clock division
-	clk_div_unit: entity work.clk_divider port map(clk_in=>clk, clk_out=>clk_1Hz);
+	clk_div_unit0: entity work.clk_divider port map(TIMECONST=>84, clk_in=>clk, clk_out=>clk_1hz);
+    clk_div_unit1: entity work.clk_divider port map(TIMECONST=>10, clk_in=>clk, clk_out=>clk_seg);
+    
+    -- 7 seg units
+    seg_unit0: entity work.hex_to_sseg port map(hex=>std_logic_vector(pc(3 downto 0)), sseg=>seg0);
+    seg_unit1: entity work.hex_to_sseg port map(hex=>std_logic_vector(pc(7 downto 4)), sseg=>seg1);
 	clk_mips <= clk_1Hz;
+	
+	process(clk_seg)
+    begin
+        if rising_edge(clk_seg) then
+            seg_count <= seg_count + 1;
+        end if;
+    end process;
+    
+    process(seg_count, seg0, seg1)
+    begin
+        case seg_count is
+            when "00" =>
+                an <= "1110";
+                seg <= seg0;
+            when "01" =>
+                an <= "1101";
+                seg <= seg1;
+            when "10" =>
+                an <= "1011";
+                seg <= "1000110"; --c
+            when "11" =>
+                an <= "0111";
+                seg <= "0001100";
+            when others =>
+                an <= "1111";
+                seg <= (others => '1');
+        end case;
+    end process;
 	-- update PC on rising edge of the clock with the
 	-- output of the series of branch/jump MUXes
 	process (clk_mips)

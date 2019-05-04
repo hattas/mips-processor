@@ -4,9 +4,11 @@
 -- of about 1 Hz.
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
+use ieee.numeric_std.all;
 
 entity clk_divider is
   Port ( 
+    TIMECONST : integer; -- 100000000/(84^4)/2
     CLK_IN : in STD_LOGIC;
     CLK_OUT : out STD_LOGIC
   );
@@ -14,7 +16,6 @@ end clk_divider;
 
 architecture Behavioral of clk_divider is
 
-constant TIMECONST : integer := 84; -- 100000000/(84^4)/2
 signal count0, count1, count2, count3 : integer range 0 to 1000;
 signal D : std_logic := '0';
 begin
